@@ -1,0 +1,30 @@
+{
+  "name": "gruetest",
+  "version": "1.0.0",
+  "description": "A lightweight, minimalistic testing framework.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "node lib/runtests.js",
+    "prepack": "rmdir /s /q lib && tsc --build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swordglowsblue/gruetest.git"
+  },
+  "keywords": [
+    "testing",
+    "unit tests",
+    "typescript"
+  ],
+  "author": "Katrina Scialdone",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/swordglowsblue/gruetest/issues"
+  },
+  "homepage": "https://github.com/swordglowsblue/gruetest#readme",
+  "devDependencies": {
+    "@types/node": "^13.13.0",
+    "typescript": "^3.8.3"
+  }
+}
