@@ -8,6 +8,15 @@ A lightweight, minimalistic testing framework for Typescript.
 npm i --save-dev gruetest
 ```
 
+```json
+// package.json
+{
+  "scripts": {
+    "test": "npm explore gruetest -- npm test -- path/to/test/folder"
+  }
+}
+```
+
 ## Usage
 
 ```js
