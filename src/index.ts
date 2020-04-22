@@ -19,7 +19,7 @@ export default function describe(name: string, body: DescribeBody) {
 
     if(!succ) {
       failTests()
-      for(let res of assertCtx.filter(x=>x)) {
+      for(let res of assertCtx.filter((x,i) => assertCtx.indexOf(x) === i )) {
         if(res === true) continue
         console.log(indent(res, 6))
       }
