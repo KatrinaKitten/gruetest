@@ -72,9 +72,15 @@ export class Assert {
   inRange(a: number, min: number, max: number, label?:string) {
     this.ctx.push(a >= min && a <= max || `expected: in range ${min} to ${max}${label ? ` (${label})` : ''}\nactual: ${a}`)
   }
+  notInRange(a: number, min: number, max: number, label?:string) {
+    this.ctx.push(a < min || a > max || `expected: not in range ${min} to ${max}${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
 
   inArray<T>(a: T, arr: any[], label?:string) {
     this.ctx.push(arr.includes(a) || `expected: in [${arr.join(',')}]${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
+  notInArray<T>(a: T, arr: any[], label?:string) {
+    this.ctx.push(!arr.includes(a) || `expected: not in [${arr.join(',')}]${label ? ` (${label})` : ''}\nactual: ${a}`)
   }
 
   matchPred<T>(a: T, pred: (a: T) => boolean, label?:string) {
