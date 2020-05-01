@@ -78,13 +78,13 @@ function buildAssert(ctx: AssertCtx) { return {
   },
 
   matchPred: function assertMatchPred<T>(a: T, pred: (a: T) => boolean, label?:string) {
-    ctx.push(pred(a) || `${a} did not match predicate${label ? ` (${label})` : ''}`)
+    ctx.push(pred(a) || `${a} did not match predicate${label ? ` (${label})` : ''}\nactual: ${a}`)
   },
 
   throws: function assertThrows(tryBody: () => void, catchPred: (e: any) => boolean, label?:string) {
-    let caught = false
-    try { tryBody() } catch(e) { caught = catchPred(e) }
-    ctx.push(caught || `did not throw expected exception${label ? ` (${label})` : ''}`)
+    let caught = false, ex
+    try { tryBody() } catch(e) { ex = e; caught = catchPred(e) }
+    ctx.push(caught || `did not throw expected exception${label ? ` (${label})` : ''}\nactual: ${ex}`)
   }
 }}
 
