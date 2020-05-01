@@ -3,6 +3,8 @@ import { isAbsolute, join as joinPath, normalize } from 'path'
 
 /** Mark tests as having failed. @internal */
 export const failTests = () => testsFailed = true
+/** Reset whether tests have failed. @internal */
+export const unfailTests = () => testsFailed = false
 let testsFailed = false
 
 function _run(dirpath: string, reqpath: string) {
