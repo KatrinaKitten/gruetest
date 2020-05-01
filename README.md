@@ -46,11 +46,13 @@ describe('Test Category', it => {
 | `strictEqual` | Assert that two parameters are strictly equal (`===`).
 | `notEqual` | Assert that two parameters are not equal (`!=`).
 | `strictNotEqual` | Assert that two parameters are strictly not equal (`!==`).
-| `inRange` | Assert that two numeric parameters are within a range (inclusive).
 | `greaterThan` | Assert that the first numeric parameter is greater than the second.
 | `lessThan` | Assert that the first numeric parameter is less than the second.
 | `greaterOrEqual` | Assert that the first numeric parameter is greater than or equal to the second.
 | `lessOrEqual` | Assert that the first numeric parameter is less than or equal to the second.
 | `inArray` | Assert that the first parameter is contained in the array passed as the second.
+| `inRange` | Assert that the first numeric parameter is within a range defined by the second and third (inclusive).
+| `notInRange` | Assert that the first numeric parameter is within a range defined by the second and third (inclusive).
+| `notInArray` | Assert that the first parameter is not contained in the array passed as the second.
 | `matchPred` | Assert that the function passed as the second parameter returns true when passed the first.
 | `throws` | Assert that the function passed as the first parameter throws, and the exception matches the predicate passed as the second.
