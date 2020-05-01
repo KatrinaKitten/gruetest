@@ -84,7 +84,7 @@ export class Assert {
   }
 
   matchPred<T>(a: T, pred: (a: T) => boolean, label?:string) {
-    this.ctx.push(pred(a) || `${a} did not match predicate${label ? ` (${label})` : ''}\nactual: ${a}`)
+    this.ctx.push(pred(a) || `did not match predicate${label ? ` (${label})` : ''}\nactual: ${a}`)
   }
 
   throws(tryBody: () => void, catchPred: (e: any) => boolean, label?:string) {
