@@ -5,7 +5,9 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "build": "tsc --build",
     "test": "node lib/runtests.js",
+    "testself": "npm test -- lib/test -nl",
     "prepack": "rmdir /s /q lib && tsc --build"
   },
   "repository": {
