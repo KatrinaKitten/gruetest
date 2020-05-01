@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import { isAbsolute, join as joinPath, normalize } from 'path'
 
-/** Mark tests as having failed. Internal use only! */
+/** Mark tests as having failed. @internal */
 export const failTests = () => testsFailed = true
 let testsFailed = false
 

@@ -12,6 +12,7 @@
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
     "watch": true,
-    "declaration": true
+    "declaration": true,
+    "stripInternal": true
   }
 }

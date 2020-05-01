@@ -6,13 +6,13 @@ const todoMark = '\u001B[1;33m!\u001B[0m'
 
 type AssertCtx = (true|string)[]
 type DescribeBody = (it: (text: string, body: ItBody) => void, todo: (text: string) => void) => void
-type ItBody = (assert: ReturnType<typeof buildAssert>) => void
+type ItBody = (assert: Assert) => void
 
 export default function describe(name: string, body: DescribeBody) {
   console.log(`\u001b[1m${name}\u001B[0m`)
   body(function it(text: string, body: ItBody) {
     let assertCtx: AssertCtx = []
-    body(buildAssert(assertCtx))
+    body(new Assert(assertCtx))
 
     let succ = assertCtx.reduce((a,b) => a && (b === true), true as boolean)
     console.log(`  ${succ ? succMark : failMark} ${text}`)
@@ -35,58 +35,58 @@ export function testConsistency<T>(getParam: () => T, body: (param: T) => void, 
   return params
 }
 
-function buildAssert(ctx: AssertCtx) { return {
-  truth: function assertTruth(a: any, label?:string) {
-    ctx.push(!!a || `expected: truthy value${label ? ` (${label})` : ''}\nactual: ${a}`)
-  },
+export class Assert {
+  /** @internal */ readonly __ctx = this.ctx
+  /** @internal */ constructor(private ctx: AssertCtx) {}
+ 
+  truth(a: any, label?:string) {
+    this.ctx.push(!!a || `expected: truthy value${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
 
-  equal: function assertEqual<T>(a: T, b: T, label?:string) { 
-    ctx.push(a == b || `expected: ${b}${label ? ` (${label})` : ''}\nactual: ${a}`) 
-  },
+  equal<T>(a: T, b: T, label?:string) { 
+    this.ctx.push(a == b || `expected: ${b}${label ? ` (${label})` : ''}\nactual: ${a}`) 
+  }
+  strictEqual<T>(a: T, b: T, label?:string) { 
+    this.ctx.push(a === b || `expected: ${b}${label ? ` (${label})` : ''}\nactual: ${a}`) 
+  }
+  notEqual<T>(a: T, b: T, label?:string) { 
+    this.ctx.push(a != b || `expected: ${a} != ${b}${label ? ` (${label})` : ''}`) 
+  }
+  strictNotEqual<T>(a: T, b: T, label?:string) { 
+    this.ctx.push(a !== b || `expected: ${a} !== ${b}${label ? ` (${label})` : ''}`) 
+  }
 
-  strictEqual: function assertStrictEqual<T>(a: T, b: T, label?:string) { 
-    ctx.push(a === b || `expected: ${b}${label ? ` (${label})` : ''}\nactual: ${a}`) 
-  },
+  greaterThan(a: number, b: number, label?:string) {
+    this.ctx.push(a > b || `expected: > ${b}${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
+  lessThan(a: number, b: number, label?:string) {
+    this.ctx.push(a < b || `expected: < ${b}${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
+  greaterOrEqual(a: number, b: number, label?:string) {
+    this.ctx.push(a >= b || `expected: >= ${b}${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
+  lessOrEqual(a: number, b: number, label?:string) {
+    this.ctx.push(a <= b || `expected: <= ${b}${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
 
-  notEqual: function assertNotEqual<T>(a: T, b: T, label?:string) { 
-    ctx.push(a != b || `expected: ${a} != ${b}${label ? ` (${label})` : ''}`) 
-  },
+  inRange(a: number, min: number, max: number, label?:string) {
+    this.ctx.push(a >= min && a <= max || `expected: in range ${min} to ${max}${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
 
-  strictNotEqual: function assertStrictNotEqual<T>(a: T, b: T, label?:string) { 
-    ctx.push(a !== b || `expected: ${a} !== ${b}${label ? ` (${label})` : ''}`) 
-  },
+  inArray<T>(a: T, arr: any[], label?:string) {
+    this.ctx.push(arr.includes(a) || `expected: in [${arr.join(',')}]${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
 
-  inRange: function assertInRange(a: number, min: number, max: number, label?:string) {
-    ctx.push(a >= min && a <= max || `expected: in range ${min} to ${max}${label ? ` (${label})` : ''}\nactual: ${a}`)
-  },
+  matchPred<T>(a: T, pred: (a: T) => boolean, label?:string) {
+    this.ctx.push(pred(a) || `${a} did not match predicate${label ? ` (${label})` : ''}\nactual: ${a}`)
+  }
 
-  greaterThan: function assertGreaterThan(a: number, b: number, label?:string) {
-    ctx.push(a > b || `expected: > ${b}${label ? ` (${label})` : ''}\nactual: ${a}`)
-  },
-  lessThan: function assertLessThan(a: number, b: number, label?:string) {
-    ctx.push(a < b || `expected: < ${b}${label ? ` (${label})` : ''}\nactual: ${a}`)
-  },
-  greaterOrEqual: function assertGreaterOrEqual(a: number, b: number, label?:string) {
-    ctx.push(a >= b || `expected: >= ${b}${label ? ` (${label})` : ''}\nactual: ${a}`)
-  },
-  lessOrEqual: function assertLessOrEqual(a: number, b: number, label?:string) {
-    ctx.push(a <= b || `expected: <= ${b}${label ? ` (${label})` : ''}\nactual: ${a}`)
-  },
-
-  inArray: function assertInArray<T>(a: T, arr: any[], label?:string) {
-    ctx.push(arr.includes(a) || `expected: in [${arr.join(',')}]${label ? ` (${label})` : ''}\nactual: ${a}`)
-  },
-
-  matchPred: function assertMatchPred<T>(a: T, pred: (a: T) => boolean, label?:string) {
-    ctx.push(pred(a) || `${a} did not match predicate${label ? ` (${label})` : ''}\nactual: ${a}`)
-  },
-
-  throws: function assertThrows(tryBody: () => void, catchPred: (e: any) => boolean, label?:string) {
+  throws(tryBody: () => void, catchPred: (e: any) => boolean, label?:string) {
     let caught = false, ex
     try { tryBody() } catch(e) { ex = e; caught = catchPred(e) }
-    ctx.push(caught || `did not throw expected exception${label ? ` (${label})` : ''}\nactual: ${ex}`)
+    this.ctx.push(caught || `did not throw expected exception${label ? ` (${label})` : ''}\nactual: ${ex}`)
   }
-}}
+}
 
 function indent(str: string, by: string|number): string {
   if(typeof by === 'number') by = ' '.repeat(by)
